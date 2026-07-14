@@ -1,0 +1,248 @@
+# services:
+
+#   postgres:
+#     image: postgres:16
+#     container_name: postgres-db
+#     restart: always
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: 123456
+#       POSTGRES_DB: chat_db
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+#     networks:
+#       - chat-network
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U postgres"]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 5
+
+#   minio:
+#     image: minio/minio
+#     container_name: minio
+#     restart: always
+#     command: server /data --console-address ":9001"
+#     environment:
+#       MINIO_ROOT_USER: minioadmin
+#       MINIO_ROOT_PASSWORD: minioadmin
+#     ports:
+#       - "9000:9000"
+#       - "9001:9001"
+#     volumes:
+#       - miniodata:/data
+#     networks:
+#       - chat-network
+
+#   emqx:
+#     image: emqx/emqx
+#     container_name: emqx
+#     restart: always
+#     ports:
+#       - "1883:1883"
+#       - "8083:8083"
+#       - "18083:18083"
+#     networks:
+#       - chat-network
+
+#   # ================= BACKEND (NO app.jar) =================
+#   backend:
+#     image: maven:3.9-eclipse-temurin-17
+#     container_name: spring-backend
+#     working_dir: /app
+#     volumes:
+#       - ./App/backend:/app
+#     command: mvn spring-boot:run
+#     restart: always
+#     depends_on:
+#       postgres:
+#         condition: service_healthy
+#       minio:
+#         condition: service_started
+#       emqx:
+#         condition: service_started
+#     ports:
+#       - "8080:8080"
+#       - "8082:8082"
+#     environment:
+#       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/chat_db
+#       SPRING_DATASOURCE_USERNAME: postgres
+#       SPRING_DATASOURCE_PASSWORD: 123456
+
+#       SPRING_JPA_HIBERNATE_DDL_AUTO: none
+#       SPRING_JPA_SHOW_SQL: "true"
+
+#       JWT_SECRET: secret-key
+#       JWT_EXPIRATION: 86400000
+
+#       MINIO_URL: http://minio:9000
+#       MINIO_ACCESS_KEY: minioadmin
+#       MINIO_SECRET_KEY: minioadmin
+#       MINIO_BUCKET: chat-app
+
+#       MQTT_BROKER: tcp://emqx:1883
+#     networks:
+#       - chat-network
+
+#   frontend:
+#     image: node:18
+#     container_name: react-frontend
+#     working_dir: /app
+#     volumes:
+#       - ./App/frontend:/app
+#     command: sh -c "npm install && npm start -- --host 0.0.0.0"
+#     restart: always
+#     depends_on:
+#       - backend
+#     ports:
+#       - "3000:3000"
+#       - "3001:3001"
+#     networks:
+#       - chat-network
+
+# volumes:
+#   pgdata:
+#   miniodata:
+
+# networks:
+#   chat-network:
+#     driver: bridge
+
+
+
+
+
+
+
+
+
+
+services:
+
+  # ================= POSTGRES =================
+  postgres:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: chat_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - chat-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  # ================= MINIO =================
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+    networks:
+      - chat-network
+
+
+  # ================= EMQX =================
+  emqx:
+    image: emqx/emqx
+    container_name: emqx
+    restart: always
+    ports:
+      - "1883:1883"
+      - "8083:8083"
+      - "18083:18083"
+    networks:
+      - chat-network
+
+
+  # ================= BACKEND =================
+  backend:
+    image: maven:3.9-eclipse-temurin-17
+    container_name: spring-backend
+    working_dir: /app
+    volumes:
+      - ./App/backend:/app
+    command: mvn spring-boot:run
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      emqx:
+        condition: service_started
+    ports:
+      - "8081:8081"   # ✔ FIX ĐỒNG BỘ SPRING BOOT
+    environment:
+
+      # ================= DATABASE =================
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/chat_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
+
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_SHOW_SQL: "true"
+
+      # ================= JWT =================
+      JWT_SECRET: secret-key
+      JWT_EXPIRATION: 86400000
+
+      # ================= MINIO (FIX QUAN TRỌNG) =================
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET: chat-files   # ✔ FIX: đồng bộ bucket
+
+      # ================= MQTT =================
+      MQTT_BROKER: tcp://emqx:1883
+
+    networks:
+      - chat-network
+
+
+  # ================= FRONTEND =================
+  frontend:
+    image: node:18
+    container_name: react-frontend
+    working_dir: /app
+    volumes:
+      - ./App/frontend:/app
+    command: sh -c "npm install && npm start -- --host 0.0.0.0"
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:8081
+      REACT_APP_MINIO_URL: http://localhost:9000   # ✔ FIX IMAGE URL
+    networks:
+      - chat-network
+
+
+volumes:
+  pgdata:
+  miniodata:
+
+networks:
+  chat-network:
+    driver: bridge
