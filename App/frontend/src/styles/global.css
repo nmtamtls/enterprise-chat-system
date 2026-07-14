@@ -1,0 +1,59 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+
+.user-profile-card {
+  width: 300px;
+  background: #111214;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.profile-banner { height: 60px; }
+
+.avatar-wrapper {
+  position: relative;
+  margin-top: -30px;
+  margin-left: 16px;
+}
+
+.avatar-wrapper img {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  border: 6px solid #111214;
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 5px; right: 5px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 3px solid #111214;
+}
+
+.status-dot.active { background: #23a55a; } /* Online */
+
+.user-info-section { padding: 16px; }
+
+.info-item label {
+  display: block;
+  font-size: 10px;
+  font-weight: bold;
+  color: #b5bac1;
+  margin-bottom: 4px;
+}
+
+.info-item p { font-size: 14px; margin-bottom: 12px; }
+
+.more-options {
+  cursor: pointer;
+  padding: 5px;
+  color: #b5bac1;
+}
+
+.more-options:hover { color: white; }

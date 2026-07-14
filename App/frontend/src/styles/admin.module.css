@@ -1,0 +1,96 @@
+.adminWrapper {
+    display: flex;
+    height: 100vh;
+    background-color: #36393f;
+    color: #dcddde;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Sidebar */
+.adminSidebar {
+    width: 240px;
+    background-color: #2f3136;
+    display: flex;
+    flex-direction: column;
+}
+
+.dbHeader {
+    padding: 15px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category { padding: 20px 10px 10px; }
+.categoryTitle {
+    font-size: 12px;
+    font-weight: 700;
+    color: #8e9297;
+    margin-bottom: 5px;
+}
+
+.navItem {
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+}
+
+.navItem:hover { background-color: #393c43; }
+.navItem.active { background-color: #4f545c; color: #fff; }
+
+.hash { color: #72767d; margin-right: 6px; font-weight: bold; }
+
+/* Main Content */
+.mainContent { flex: 1; display: flex; flex-direction: column; }
+
+.contentHeader {
+    height: 48px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.1), 0 1.5px 0 rgba(0,0,0,0.05);
+}
+
+.headerHash { font-size: 24px; color: #72767d; margin-right: 8px; }
+
+.tableArea { flex: 1; padding: 20px; overflow: auto; }
+
+.dbTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #2f3136;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dbTable th {
+    background-color: #202225;
+    padding: 12px;
+    text-align: left;
+    font-size: 12px;
+    color: #b9bbbe;
+}
+
+.dbTable td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #36393f;
+    font-size: 14px;
+}
+
+.dbRow:hover { background-color: #32353b; }
+
+.runBtn {
+    background-color: #3ba55e;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.runBtn:hover { background-color: #2d7d46; }

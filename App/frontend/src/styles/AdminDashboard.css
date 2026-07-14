@@ -1,0 +1,320 @@
+/* Layout chính */
+.adminWrapper {
+    display: flex;
+    height: 100vh;
+    background-color: #36393f; /* Màu nền tối Discord */
+    color: #dcddde;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* Sidebar bên trái */
+/* .adminSidebar {
+    width: 240px;
+    background-color: #2f3136;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #202225;
+} */
+.adminSidebar {
+  display: flex;
+  flex-direction: column; /* Quan trọng để đẩy nút xuống dưới */
+  height: 100vh;
+  /* Các thuộc tính khác của bạn giữ nguyên */
+}
+
+.pagination button {
+  background-color: #2f3136;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #5865F2;
+  border-color: #5865F2;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Thiết lập cho ô input số trang */
+input[type="number"] {
+  /* Loại bỏ mũi tên mặc định trên mọi trình duyệt */
+  -webkit-appearance: none; /* Chrome, Safari, Edge, Opera */
+  -moz-appearance: textfield; /* Firefox */
+  appearance: none; /* Tiêu chuẩn hiện đại */
+}
+
+/* Đảm bảo xóa bỏ hoàn toàn các phần tử điều hướng mặc định */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.dbHeader {
+    padding: 15px;
+    height: 48px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category { padding: 20px 10px 10px; }
+.categoryTitle {
+    font-size: 12px;
+    font-weight: 700;
+    color: #8e9297;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.navItem {
+    padding: 10px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    color: #8e9297;
+    transition: 0.2s;
+}
+
+.navItem:hover { background-color: #393c43; color: #dcddde; }
+.navItem.active { background-color: #4f545c; color: #fff; }
+
+.hash { color: #72767d; margin-right: 8px; font-weight: bold; font-size: 18px; }
+
+/* Vùng nội dung bên phải */
+.mainContent { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    background-color: #36393f;
+}
+
+.contentHeader {
+    height: 48px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    background-color: #36393f;
+    z-index: 10;
+}
+
+.headerHash { font-size: 24px; color: #72767d; margin-right: 8px; font-weight: 300; }
+
+.tableArea { 
+    flex: 1; 
+    padding: 24px; 
+    overflow-y: auto; 
+}
+
+/* Dashboard Grid & Cards */
+.dashboardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.statCard {
+    background-color: #2f3136;
+    padding: 24px;
+    border-radius: 8px;
+    border-left: 4px solid #3ba55e;
+    transition: transform 0.2s ease;
+}
+
+.statCard:hover { transform: translateY(-4px); }
+.statCard h4 { margin: 0; font-size: 12px; color: #8e9297; text-transform: uppercase; }
+.statCard p { margin: 12px 0 0; font-size: 32px; font-weight: bold; color: #fff; }
+
+/* Bảng dữ liệu */
+.dbTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #2f3136;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dbTable th {
+    background-color: #202225;
+    padding: 12px;
+    text-align: left;
+    font-size: 12px;
+    color: #8e9297;
+    text-transform: uppercase;
+}
+
+.dbTable td {
+    padding: 12px;
+    border-bottom: 1px solid #36393f;
+    font-size: 14px;
+    color: #b9bbbe;
+}
+
+.dbRow:hover { background-color: #32353b; }
+
+/* Badge & Buttons */
+.roleBadge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.roleBadge.red { background-color: rgba(242, 63, 66, 0.1); color: #f23f42; border: 1px solid #f23f42; }
+.roleBadge.blue { background-color: rgba(88, 101, 242, 0.1); color: #5865f2; border: 1px solid #5865f2; }
+
+.runBtn {
+    background-color: #3ba55e;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.runBtn:hover { background-color: #2d7d46; }
+
+.logoutBtn {
+    background-color: transparent;
+    border: 1px solid #f23f42;
+    color: #f23f42;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.logoutBtn:hover { background-color: #f23f42; color: white; }
+
+/* Helpers */
+.text-muted { color: #72767d; }
+.content-cell { max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+
+
+/* Thêm vào AdminDashboard.css */
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+.sortable:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.truncate-text {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* --- Cập nhật nút bấm chuyên nghiệp --- */
+
+/* Group chứa các nút để không bị dính vào nhau */
+.btnGroup {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Base style cho các nút điều khiển trong bảng */
+.ctrlBtn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 3px;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ctrlBtn:active {
+    transform: scale(0.95);
+}
+
+/* Các loại màu nút bấm theo tiêu chuẩn Moderation */
+.btn-success { background-color: #3ba55e; } /* Xanh lá: Unblock, Resolve */
+.btn-success:hover { background-color: #2d7d46; }
+
+.btn-warning { background-color: #faa61a; } /* Vàng: Block Chat, Cảnh báo */
+.btn-warning:hover { background-color: #d89013; }
+
+.btn-danger { background-color: #ed4245; }  /* Đỏ: Recall, Block Upload, Delete */
+.btn-danger:hover { background-color: #c03537; }
+
+.btn-info { background-color: #5865f2; }    /* Xanh Blue: Open Link, Detail */
+.btn-info:hover { background-color: #4752c4; }
+
+/* Nút Logout đặc biệt */
+.runBtn.logout {
+    background-color: transparent;
+    border: 1px solid #ed4245;
+    color: #ed4245;
+}
+.runBtn.logout:hover {
+    background-color: #ed4245;
+    color: white;
+}
+
+/* --- Khu vực Audit Logs (Nhật ký hệ thống) --- */
+.logArea {
+    background-color: #2f3136;
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid #202225;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.logItem {
+    padding: 10px;
+    border-bottom: 1px solid #36393f;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+}
+
+.logItem:last-child { border-bottom: none; }
+
+.logTime { color: #72767d; min-width: 150px; }
+.logUser { color: #3ba55e; font-weight: 600; }
+.logAction { color: #dcddde; }
+
+/* --- Tùy chỉnh thanh cuộn (Scrollbar) cho giống Discord --- */
+.tableArea::-webkit-scrollbar,
+.logArea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.tableArea::-webkit-scrollbar-track,
+.logArea::-webkit-scrollbar-track {
+    background: #2e3338;
+}
+
+.tableArea::-webkit-scrollbar-thumb,
+.logArea::-webkit-scrollbar-thumb {
+    background: #202225;
+    border-radius: 10px;
+}
+
+/* Text helpers */
+.text-red { color: #ed4245 !important; font-weight: bold; }
+.text-bold { font-weight: 600; color: #fff; }
+.text-italic { font-style: italic; color: #b9bbbe; }

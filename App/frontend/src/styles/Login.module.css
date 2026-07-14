@@ -1,0 +1,110 @@
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #313338;
+  font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.card {
+  width: 480px;
+  padding: 32px;
+  background-color: #313338;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  color: #B5BAC1;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  background-color: #1E1F22;
+  border: none;
+  border-radius: 3px;
+  color: #DBDEE1;
+  font-size: 16px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.input:focus {
+  border: 1px solid #00A8FC;
+}
+
+.forgotLink {
+  color: #00A8FC;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.forgotLink:hover {
+  text-decoration: underline;
+}
+
+.button {
+  width: 100%;
+  padding: 12px;
+  background-color: #5865F2;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #4752C4;
+}
+
+.errorText {
+  color: #FA777C;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.footerText {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #949BA4;
+}
+
+.link {
+  color: #00A8FC;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

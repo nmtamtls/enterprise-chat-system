@@ -1,0 +1,1418 @@
+/* Thiết lập global cho toàn trang */
+:global(html), :global(body) { 
+  margin: 0; 
+  padding: 0; 
+  overflow: hidden; 
+  height: 100%; 
+  width: 100%; 
+}
+
+.appContainer { 
+  display: flex; 
+  width: 100vw; 
+  height: 100vh; 
+  background: #1d419d; 
+  color: #dbdee1; 
+  font-family: sans-serif; 
+  overflow: hidden; 
+}
+
+.sideColumnLeft, .mainContent, .sideColumnRight { 
+  height: 100%; 
+  display: flex; 
+  flex-direction: column; 
+  overflow: hidden; 
+}
+
+
+.scrollableArea::-webkit-scrollbar { 
+  width: 8px; 
+}
+
+.scrollableArea::-webkit-scrollbar-thumb { 
+  background: #1a1b1e; 
+  border-radius: 10px; 
+}
+
+
+.leftSearchArea { 
+  padding: 12px 8px; 
+  border-bottom: 1px solid #1e1f22; 
+}
+
+.searchFakeInput { 
+  background: #121419; 
+  color: #949ba4; 
+  padding: 12px 10px; 
+  border-radius: 8px; 
+  font-size: 13px; 
+}
+
+.leftMenuItem { 
+  padding: 10px 12px; 
+  color: #949ba4; 
+  cursor: pointer; 
+  border-radius: 4px; 
+  margin: 2px 0; 
+  font-weight: 500; 
+}
+
+/* Lưu ý: class 'active' thường được nối chuỗi trong JS */
+.leftMenuItem.active { 
+  background: #3f4147; 
+  color: white; 
+}
+
+.leftSectionTitle { 
+  font-size: 11px; 
+  font-weight: 700; 
+  color: #949ba4; 
+  padding: 18px 8px 8px; 
+  text-transform: uppercase; 
+  display: flex; 
+  justify-content: space-between; 
+}
+
+.leftItem { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  padding: 6px 8px; 
+  cursor: pointer; 
+  border-radius: 4px; 
+  margin: 2px 0; 
+}
+
+.leftItem:hover { 
+  background: #35373c; 
+}
+
+.leftItemSelected { 
+  background: #3f4147; 
+  color: white; 
+}
+
+.avatarContainer { 
+  position: relative; 
+  width: 32px; 
+  height: 32px; 
+  flex-shrink: 0; 
+}
+
+.avatarImg { 
+  width: 100%; 
+  height: 100%; 
+  border-radius: 50%; 
+  object-fit: cover; 
+}
+
+.statusDot { 
+  position: absolute; 
+  bottom: -2px; 
+  right: -2px; 
+  width: 12px; 
+  height: 12px; 
+  border-radius: 50%; 
+  border: 3px solid #2b2d31; 
+}
+
+.statusDotOnline { background: #23a559; }
+.statusDotOffline { background: #80848e; }
+
+.mainContent { 
+  flex: 1; 
+  background: #313338; 
+}
+
+/* .mainHeader { 
+  height: 48px; 
+  padding: 0 16px; 
+  display: flex; 
+  align-items: center; 
+  border-bottom: 1px solid #1e1f22; 
+  flex-shrink: 0; 
+} */
+
+.headerText { 
+  font-size: 15px; 
+  font-weight: 600; 
+  color: white; 
+  margin: 0; 
+}
+
+.chatAreaContainer { 
+  flex: 1; 
+  overflow: hidden; 
+  display: flex; 
+  flex-direction: column; 
+}
+
+.welcomeBox { 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  text-align: center; 
+  color: #949ba4; 
+}
+
+.sideColumnRight { 
+  width: 280px; 
+  background: #232428; 
+  flex-shrink: 0; 
+  border-left: 1px solid #1e1f22; 
+}
+
+.rightSectionLabel { 
+  font-size: 12px; 
+  color: #949ba4; 
+  padding: 24px 16px 8px; 
+  text-transform: uppercase; 
+  margin: 0; 
+}
+
+.memberRow { 
+  display: flex; 
+  align-items: center; 
+  padding: 6px 12px; 
+  margin: 1px 8px; 
+  cursor: pointer; 
+  border-radius: 4px; 
+  gap: 12px; 
+}
+
+.memberRow:hover { 
+  background: #35373c; 
+}
+
+.userProfileCard { 
+  display: flex; 
+  flex-direction: column; 
+}
+
+.profileBanner { 
+  height: 60px; 
+  width: 100%; 
+}
+
+.profileBody { 
+  padding: 16px; 
+  position: relative; 
+  margin-top: 32px; 
+}
+
+.profileAvatarWrapper { 
+  position: absolute; 
+  top: -75px; 
+  left: 16px; 
+}
+
+.profileAvatar { 
+  width: 80px; 
+  height: 80px; 
+  border-radius: 50%; 
+  border: 6px solid #232428; 
+  background: #313338; 
+}
+
+.profileStatusDot { 
+  position: absolute; 
+  bottom: 4px; 
+  right: 4px; 
+  width: 16px; 
+  height: 16px; 
+  border-radius: 50%; 
+  border: 3px solid #232428; 
+}
+
+.profileStatusDotOnline { background: #23a559; }
+.profileStatusDotOffline { background: #80848e; }
+
+.profileName { 
+  font-size: 20px; 
+  color: white; 
+  margin: 0; 
+}
+
+.profileUsername { 
+  font-size: 14px; 
+  color: #dbdee1; 
+  margin: 4px 0 0; 
+}
+
+.profileDivider { 
+  border: none; 
+  border-top: 1px solid #3f4147; 
+  margin: 12px 0; 
+}
+
+.detailItem label { 
+  display: block; 
+  font-size: 11px; 
+  font-weight: bold; 
+  color: #b5bac1; 
+  padding: 10px 0 4px; 
+}
+
+.detailItem span { 
+  font-size: 13px; 
+  color: #dbdee1; 
+}
+
+.roleAdmin { 
+  color: #ed4245 !important; 
+  font-weight: bold; 
+}
+
+.profileBackBtn { 
+  width: 100%; 
+  background: #4e5058; 
+  color: white; 
+  border: none; 
+  padding: 8px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  margin-top: 20px; 
+}
+
+.loadingScreen { 
+  background: #313338; 
+  color: white; 
+  height: 100vh; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
+
+
+
+/* --- USER SECTION (PHẦN DƯỚI CÙNG BÊN TRÁI) --- */
+
+/* Container bao phủ cả 2 cột bên trái */
+.leftSidebarWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: calc(72px + 240px); /* Tổng chiều rộng 2 cột */
+  background-color: #1e1f22; /* Màu nền tối nhất (giống cột 1) */
+  flex-shrink: 0;
+}
+
+/* Khu vực phía trên (2 cột) */
+.topNavigationArea {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* --- THANH PROFILE BO GÓC (CARD) --- */
+.leftUserSection {
+  display: flex; 
+  background: rgb(56, 58, 64); 
+  border-radius: 8px; 
+  align-items: center; 
+  padding: 4px;
+  
+  /* Thêm các thuộc tính này để đẹp hơn */
+  margin: 10px;  /* Tạo khoảng cách với các cạnh để thấy rõ bo góc 8px */
+  flex-shrink: 0;         /* Đảm bảo thanh profile không bị bóp méo khi danh sách quá dài */
+}
+
+
+/* Avatar và Trạng thái */
+.avatarWrapper {
+  position: relative;
+  width: 32px;
+  height: 32px;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.statusIconMoon {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: #232428; /* Trùng màu nền thẻ để tạo viền */
+  border-radius: 50%;
+  font-size: 10px;
+  padding: 1px;
+}
+
+/* Chỉnh icon hành động */
+.userActions {
+  display: flex;
+  gap: 4px;
+}
+
+.actionIcon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: #dbdee1;
+  font-size: 14px;
+}
+
+.actionIcon:hover {
+  background-color: #35373c;
+  color: #f2f3f5;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  padding: 10px; /* Bo góc và padding nhẹ để tạo cảm giác "mềm" như input */
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.userInfo:hover {
+  background: #3f4147;
+}
+
+.userNames {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.currentName {
+  font-size: 13px;
+  font-weight: 400;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  margin: 0 0 1px 0;
+}
+.currentUsername {
+  font-size: 15px;
+  font-weight: 400;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  margin: 0 0 1px 0;
+}
+
+.currentStatus {
+  font-size: 11px;
+  color: rgb(181, 186, 193); /* Khớp với màu text của nút (+) trong chat */
+  line-height: 1.2;
+}
+
+.userActions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.actionIcon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(181, 186, 193); /* Đồng bộ màu icon với chat input */
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.2s;
+}
+
+.actionIcon:hover {
+  background: #3f4147;
+  color: white;
+}
+
+.avatarImg {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover; 
+  display: block;
+  background-color: #383a40; /* Cùng màu nền với thanh input chat */
+}
+
+.statusDot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 3px solid #232428; 
+}
+
+.statusDotOnline { background: #23a559; }
+
+.tabSwitcher {
+  display: flex;
+  padding: 10px;
+  background-color: #2b2d31;
+  gap: 10px;
+}
+
+.tabItem {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  background: #383a40;
+  color: #b5bac1;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tabActive {
+  background-color: #5865f2;
+  color: white;
+}
+
+.tabItem:hover:not(.tabActive) {
+  background-color: #4e5058;
+}
+/* --- CỘT 1: SIDEBAR ICON NHÓM (NGOÀI CÙNG TRÁI) --- */
+.sideBarGroups {
+  width: 72px;
+  background-color: #1e1f22;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 12px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.groupIconWrapper {
+  position: relative; /* Quan trọng để định vị tooltip */
+  margin-bottom: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.groupAvatarIcon, .homeIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  object-fit: cover;
+  background-color: #00288e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hiệu ứng biến hình khi Hover hoặc Active */
+.groupIconWrapper:hover .groupAvatarIcon, 
+.activeGroup .groupAvatarIcon,
+.groupIconWrapper:hover .homeIcon {
+  border-radius: 16px;
+  background-color: #5865f2;
+  color: white;
+}
+
+/* Tooltip hiển thị tên nhóm khi di chuột vào */
+.groupTooltip {
+  position: absolute;
+  left: 70px;
+  background-color: #111214;
+  color: #dbdee1;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.9);
+  transform-origin: left;
+  transition: all 0.1s ease;
+  z-index: 100;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.groupIconWrapper:hover .groupTooltip {
+  opacity: 1;
+  transform: scale(1);
+  left: 78px;
+}
+
+/* Vạch trắng bên cạnh icon */
+.activeIndicator {
+  position: absolute;
+  left: 0;
+  width: 4px;
+  height: 0;
+  background-color: white;
+  border-radius: 0 4px 4px 0;
+  transition: 0.2s;
+  opacity: 0;
+}
+
+.groupIconWrapper:hover .activeIndicator {
+  height: 20px;
+  opacity: 1;
+}
+
+.activeGroup .activeIndicator {
+  height: 40px;
+  opacity: 1;
+}
+
+.groupSeparator {
+  width: 32px;
+  height: 2px;
+  background-color: #35363c;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+/* --- CỘT 2: DANH SÁCH USER (DIRECT MESSAGES) --- */
+.sideColumnLeft {
+  width: 240px;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex-shrink: 0;
+  
+  /* ĐƯỜNG KẺ PHÂN TÁCH CỘT 1 VÀ CỘT 2 */
+  border-left: 2px solid rgba(255, 255, 255, 0.05); /* Đường kẻ mảnh, mờ tinh tế */
+  
+  /* Nếu bạn muốn dùng màu đặc (solid) như yêu cầu cũ: */
+  /* border-left: 1px solid #232428; */
+}
+
+/* Đảm bảo Cột 1 không có border gây chồng chéo */
+.sideBarGroups {
+  width: 72px;
+  background-color: #1e1f22;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 12px;
+  flex-shrink: 0;
+}
+
+/* Header cho cột 2 (Thay thế Tab nếu bạn chỉ hiện User) */
+.columnHeader {
+  height: 48px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+  border-bottom: 1px solid #1f2023;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+}
+
+.scrollableArea {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 8px;
+}
+
+/* Tùy chỉnh thanh cuộn cho giống Discord */
+.scrollableArea::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollableArea::-webkit-scrollbar-thumb {
+  background-color: #1a1b1e;
+  border-radius: 10px;
+}
+
+.leftItem {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  margin: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #949ba4;
+  transition: background-color 0.1s, color 0.1s;
+}
+
+.leftItem:hover {
+  background-color: #35373c;
+  color: #dbdee1;
+}
+
+.leftItemSelected {
+  background-color: #3f4147;
+  color: white;
+}
+
+.avatarContainer {
+  position: relative;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.avatarImg {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.statusDot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 3px solid #2b2d31; /* Khớp với màu nền sideColumnLeft */
+}
+
+.statusDotOnline { background-color: #23a55a; }
+.statusDotOffline { background-color: #80848e; }
+
+.userNames {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.currentName {
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.currentStatus {
+  font-size: 11px;
+  color: #b5bac1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 4px 0 0 0;
+}
+.leftUserSection .currentUsername {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.actionIcon {
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  font-size: 18px;
+}
+
+.actionIcon:hover {
+  background-color: #3f4147;
+}
+
+
+
+/* Container chứa cả icon và vạch trắng */
+.groupIconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px; /* Độ rộng cố định của sidebar */
+  height: 48px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+/* Vạch trắng bên trái */
+.activeIndicator {
+  position: absolute;
+  left: 0; /* Sát lề trái sidebar */
+  width: 4px;
+  background-color: #ffffff;
+  border-radius: 0 4px 4px 0; /* Bo góc bên phải */
+  transition: all 0.2s ease;
+  
+  /* Trạng thái mặc định: Ẩn và thu nhỏ */
+  height: 0;
+  opacity: 0;
+}
+
+/* Khi hover: Vạch trắng hiện lên ngắn (khoảng 20px) */
+.groupIconWrapper:hover .activeIndicator {
+  height: 20px;
+  opacity: 1;
+}
+
+/* Khi được chọn (Active): Vạch trắng dài ra (khoảng 40px) */
+.activeGroup .activeIndicator {
+  height: 40px;
+  opacity: 1;
+}
+
+/* Hiệu ứng cho Icon khi Active hoặc Hover */
+.groupAvatarIcon, .homeIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%; /* Mặc định hình tròn */
+  background-color: #313338;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+/* Khi Hover hoặc Active thì icon biến thành hình vuông bo góc */
+.groupIconWrapper:hover .groupAvatarIcon,
+.groupIconWrapper:hover .homeIcon,
+.activeGroup .groupAvatarIcon,
+.activeGroup .homeIcon {
+  border-radius: 16px;
+  background-color: #5865f2; /* Màu xanh đặc trưng khi chọn */
+}
+/* CỘT GIỮA - HIỂN THỊ THÔNG TIN TRA CỨU & CHAT */
+/* Layout Cột Giữa */
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #313338;
+  height: 100vh;
+}
+
+
+.mainHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Đẩy 2 bên ra xa nhau */
+  padding: 0 16px;
+  height: 60px;
+  background-color: #313338;
+  gap: 20px;
+  overflow: hidden;
+  border-bottom: 1px solid #1f2023;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  min-width: 200px; /* Đảm bảo tên không bị mất */
+  flex-shrink: 0;   /* Không được co lại */
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-grow: 1;     /* Chiếm không gian còn lại */
+  justify-content: flex-end; /* Căn hết sang phải */
+  min-width: 350px; /* Tránh vỡ khi cửa sổ quá nhỏ */
+}
+
+.miniSearchContainer {
+  position: relative;
+  width: 200px;
+  flex-shrink: 0;
+}
+/* 
+.mainHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 48px;
+  border-bottom: 1px solid #1e1f22;
+  flex-shrink: 0;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+} */
+
+.headerText {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.createGroupBtn {
+  padding: 8px 16px;
+  background-color: #5865f2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.createGroupBtn:hover {
+  background-color: #4752c4;
+}
+
+/* Khu vực tìm kiếm */
+.searchWrapper {
+  padding: 12px 20px;
+  background-color: #313338;
+}
+
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 15px;
+  color: #b5bac1;
+  display: flex;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px 12px 12px 48px;
+  border-radius: 8px;
+  border: 1px solid #1e1f22;
+  background-color: #1e1f22;
+  color: #dbdee1;
+  outline: none;
+  font-size: 14px;
+}
+
+.searchClear {
+  position: absolute;
+  right: 15px;
+  color: #b5bac1;
+  cursor: pointer;
+}
+
+/* Vùng hiển thị kết quả tìm kiếm & Welcome */
+.chatAreaContainer {
+  flex: 1;
+  overflow: hidden; /* Để Chat component tự quản lý cuộn */
+  display: flex;
+  flex-direction: column;
+}
+
+.searchResultsArea {
+  padding: 20px;
+  color: white;
+  overflow-y: auto;
+  height: 100%;
+  background-color: #313338;
+}
+
+.resultSectionTitle {
+  color: #b5bac1;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 15px;
+  letter-spacing: 0.5px;
+}
+
+.resultGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+/* Card kết quả */
+.searchCard {
+  background-color: #2b2d31;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.searchCard:hover {
+  border-color: #5865f2;
+  background-color: #35373c;
+}
+
+.searchAvatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.groupIconSquare {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  background-color: #5865f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.statusLabel {
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.online { color: #23a559; }
+.offline { color: #82858f; }
+
+.noResult {
+  text-align: center;
+  margin-top: 40px;
+  color: #82858f;
+}
+
+.welcomeBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+
+/* MODAL TẠO NHÓM */
+/* Modal Base */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: #313338;
+  padding: 24px;
+  border-radius: 16px;
+  width: 440px;
+  color: white;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.discordMemberList {
+  max-height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding-right: 4px;
+}
+
+/* Chrome / Edge */
+.discordMemberList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.discordMemberList::-webkit-scrollbar-track {
+  background: #2b2d31;
+  border-radius: 999px;
+}
+
+.discordMemberList::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.discordMemberList:hover::-webkit-scrollbar-thumb {
+  background: #1a1b1e;
+}
+
+.discordMemberList::-webkit-scrollbar-thumb:hover {
+  background: #111214;
+}
+
+/* Firefox */
+.discordMemberList {
+  scrollbar-width: thin;
+  scrollbar-color: #1a1b1e #2b2d31;
+}
+
+.modalCloseBtn {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  background: none;
+  border: none;
+  color: #b5bac1;
+  cursor: pointer;
+  font-size: 20px;
+  transition: color 0.2s;
+}
+
+.modalCloseBtn:hover {
+  color: white;
+}
+
+.modalTitle {
+  text-align: center;
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.modalSubtitle {
+  text-align: center;
+  color: #b5bac1;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* Form Elements */
+.inputLabel {
+  font-size: 12px;
+  font-weight: bold;
+  color: #b5bac1;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.modalInput {
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  border: none;
+  background: #1e1f22;
+  color: white;
+  outline: none;
+  font-size: 14px;
+}
+
+/* User Selection List */
+.memberList {
+  max-height: 280px;
+  overflow-y: auto;
+  margin: 15px 0;
+  padding-right: 5px;
+}
+
+/* Tùy chỉnh thanh cuộn cho Modal */
+.memberList::-webkit-scrollbar {
+  width: 6px;
+}
+.memberList::-webkit-scrollbar-thumb {
+  background-color: #1e1f22;
+  border-radius: 10px;
+}
+
+.memberItem {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.memberItem:hover {
+  background-color: #393b41;
+}
+
+.memberItemSelected {
+  background-color: #3f4147;
+}
+
+.memberAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
+.memberCheckbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #5865f2;
+}
+
+/* Footer Actions */
+.modalFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btnCreate {
+  padding: 12px;
+  background-color: #5865f2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+  transition: background 0.2s;
+}
+
+.btnCreate:disabled {
+  background-color: #4f545c;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btnCreate:not(:disabled):hover {
+  background-color: #4752c4;
+}
+
+.btnBack {
+  background: none;
+  color: #b5bac1;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+.btnBack:hover {
+  color: white;
+}
+
+
+
+/* Container chung cho các nút icon */
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #b5bac1; /* Màu mặc định */
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+
+/* Hiệu ứng hover cho nút */
+.iconBtn:hover {
+  background-color: rgba(78, 80, 88, 0.2);
+  color: #ffffff;
+}
+
+/* Thanh tìm kiếm */
+.searchWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #b5bac1;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.miniSearchInput {
+  padding: 10px 15px 10px 35px; /* Chừa chỗ cho icon */
+  border-radius: 6px;
+  border: 1px solid #3f4147;
+  background-color: #2b2d31;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Sidebar trượt mượt mà */
+.sideColumnRight {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scrollableArea {
+  width: 300px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+
+/* Trong Home.module.css */
+.modalOverlay, .notificationModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Làm mờ nền */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Quan trọng: Đè lên mọi element khác */
+}
+
+
+
+.avatarContainer {
+  position: relative; /* Quan trọng: để badge định vị dựa trên cái này */
+  display: inline-block;
+}
+
+.unreadBadge {
+  position: absolute;
+  top: -10px;     /* Đẩy lên trên một chút */
+  right: -7px;   /* Đẩy sang phải một chút */
+  background-color: #ff4757;
+  color: white;
+  border-radius: 50%; /* Hình tròn */
+  padding: 2px;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #2f3542; /* Tạo viền bao quanh để tách biệt với avatar */
+}
+
+.groupIconWrapper {
+  position: relative; /* Cần thiết để badge định vị góc phải */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+.unreadBadgeGroup {
+  position: absolute;
+  bottom: -3px;    /* Đẩy xuống thấp hơn một chút */
+  right: 10px;     /* Đẩy sang phải hơn một chút */
+  background-color: #ff4757;
+  color: white;
+  font-size: 11px; /* Tăng từ 10px lên 11px */
+  font-weight: bold;
+  height: 26px;    /* Tăng từ 18px lên 22px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px solid #1e1f22; /* Tăng độ dày viền để badge tách biệt rõ hơn */
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+/* Khi số nhỏ hơn 10 (Hình tròn) */
+.badgeRoundGroup {
+  border-radius: 50%;
+  width: 26px; /* Tăng từ 18px lên 22px để giữ hình tròn */
+}
+
+/* Khi số từ 10 trở lên (Hình viên thuốc) */
+.badgeWideGroup {
+  border-radius: 12px; /* Tăng độ bo góc */
+  padding: 0 6px;      /* Tăng padding để badge dài hơn */
+  min-width: 26px;     /* Tăng chiều rộng tối thiểu */
+}
+
+.bellWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+
+.currentStatusWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Đẩy nội dung ra hai bên */
+  width: 100%;
+}
+
+.muteBellWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 52px;
+  
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  vertical-align: middle;
+  margin-top: 1px;
+}
+
+.crossLine {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px; /* Độ dài vừa với icon */
+  height: 2px;
+  background-color: #ff4d4f; /* Màu đỏ trùng với icon */
+  transform: translate(-50%, -50%) rotate(-45deg);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+
+.muteGroupWrapper {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  z-index: 10;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.crossLineGroup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 1.5px;
+  background-color: #ff4d4f;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  border-radius: 2px;
+  pointer-events: none;
+}

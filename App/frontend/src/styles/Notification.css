@@ -1,0 +1,13 @@
+/* src/styles/global.css */
+.custom-banner {
+    background-color: #ff4d4f;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}

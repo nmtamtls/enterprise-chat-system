@@ -1,0 +1,69 @@
+.modalOverlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex; justify-content: center; align-items: center; z-index: 1000;
+}
+
+.modalContent {
+    background: #36393f;
+    padding: 25px;
+    border-radius: 8px;
+    width: 350px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    display: flex; flex-direction: column; gap: 15px;
+    color: #ffffff;
+}
+
+.fingerprintBox {
+    background: #2f3136;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 12px;
+    color: #b9bbbe;
+}
+
+.fingerprintBox code {
+    color: #5865f2;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.modalContent input {
+    padding: 10px; background: #202225;
+    border: 1px solid #202225;
+    border-radius: 4px; color: #ffffff;
+}
+
+.statusBoxWarning {
+    padding: 15px; background: #422006; color: #fef3c7;
+    border-radius: 5px; text-align: center; font-size: 13px;
+}
+
+.statusBoxSuccess {
+    padding: 15px; background: #064e3b; color: #d1fae5;
+    border-radius: 5px; text-align: center; font-size: 13px;
+}
+
+.buttonGroup { display: flex; gap: 10px; }
+
+.saveBtn {
+    background-color: #5865f2; color: white; border: none;
+    padding: 8px 16px; border-radius: 3px; cursor: pointer; flex: 1;
+}
+
+.closeBtn {
+    background-color: #4f545c; color: white; border: none;
+    padding: 8px 16px; border-radius: 3px; cursor: pointer; flex: 1;
+}
+.statusBoxError {
+    padding: 15px;
+    background: #4a1515; /* Màu đỏ đậm phong cách Dark Mode */
+    color: #ff8b8b;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
