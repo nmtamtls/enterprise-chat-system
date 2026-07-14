@@ -1,0 +1,534 @@
+Cài đặt DBeaver thông qua https://dbeaver.io/download/
+
+Tạo file cấu hình Kết nối PostgreSQL
+
+Cấu hình mẫu 
+
+Host: localhost
+Port: 5432
+Database: chat_db
+Username: postgres
+Password: 123456
+
+Test Connection (Hãy khởi động docker trước và Backend)
+
+Có thể sử dụng dump-chat_db-202607041815.sql để chạy
+
+CSDL 
+
+-- =====================================================
+--  RESET DATABASE (CLEAN 100%)
+-- =====================================================
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
+-- cấp quyền lại
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;
+
+-- ================= EXTENSIONS =================
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+CREATE EXTENSION IF NOT EXISTS unaccent;
+
+-- ================= USERS =================
+CREATE TABLE users (	
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    full_name VARCHAR(100),
+    avatar_url TEXT,
+    status VARCHAR(20) NOT NULL CHECK (status IN ('active','inactive','banned')) DEFAULT 'active',
+    role VARCHAR(20) NOT NULL CHECK (role IN ('USER','ADMIN')) DEFAULT 'USER',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_users_email ON users(email);
+
+-- ================= AUTH =================
+CREATE TABLE auth_sessions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token TEXT NOT NULL UNIQUE,
+    expired_at TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_auth_user ON auth_sessions(user_id);
+
+	-- ================= CONTACT =================
+	CREATE TABLE contacts (
+	    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+	    contact_user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+	    status VARCHAR(20) NOT NULL CHECK (status IN ('pending','accepted','blocked')) DEFAULT 'pending',
+	    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	    CHECK (user_id <> contact_user_id)
+	);
+	CREATE INDEX idx_contacts_user ON contacts(user_id);
+	CREATE INDEX idx_contacts_contact_user ON contacts(contact_user_id);
+	CREATE UNIQUE INDEX uniq_contacts_pair
+	ON contacts (LEAST(user_id, contact_user_id), GREATEST(user_id, contact_user_id));
+
+-- ================= CONVERSATION =================
+CREATE TABLE conversations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    type VARCHAR(20) NOT NULL CHECK (type IN ('PRIVATE', 'GROUP')),
+    name VARCHAR(255),
+    group_avatar TEXT,
+    created_by UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE conversation_members (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    conversation_id UUID NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    role VARCHAR(20) NOT NULL CHECK (role IN ('owner','admin','member')) DEFAULT 'member',
+    status VARCHAR(20) NOT NULL CHECK (status IN ('active','left','removed')) DEFAULT 'active',
+    joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    left_at TIMESTAMP,
+    UNIQUE(conversation_id, user_id)
+);
+CREATE INDEX idx_conv_members_user ON conversation_members(user_id);
+	
+	-- ================= MESSAGE =================
+	CREATE TABLE messages (
+	    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	    conversation_id UUID NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+	    sender_id UUID REFERENCES users(id) ON DELETE SET NULL,
+	    content TEXT,
+	    message_type VARCHAR(20) NOT NULL CHECK (message_type IN ('TEXT','IMAGE','VIDEO','FILE','SYSTEM')),
+	    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+	    
+	    is_pinned BOOLEAN NOT NULL DEFAULT FALSE,
+        pinned_at TIMESTAMP,
+	    CHECK (
+	        (message_type = 'TEXT' AND content IS NOT NULL)
+	        OR (message_type IN ('IMAGE','VIDEO','FILE') AND content IS NULL)
+	        OR (message_type = 'SYSTEM' AND content IS NOT NULL)
+	    )
+	);
+	CREATE INDEX idx_messages_conversation ON messages(conversation_id);
+	CREATE INDEX idx_messages_created_at ON messages(created_at DESC);
+	CREATE INDEX idx_messages_sender ON messages(sender_id);
+	CREATE INDEX idx_messages_pinned_conversation ON messages(conversation_id, is_pinned) WHERE is_pinned = TRUE;
+	
+	-- ================= MESSAGE STATUS =================
+	CREATE TABLE message_status (
+	    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	    message_id UUID NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+	    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+	    status VARCHAR(20) NOT NULL CHECK (status IN ('sent','delivered','read')),
+	    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	    UNIQUE(message_id, user_id)
+	);
+	CREATE INDEX idx_message_status_message ON message_status(message_id);
+	CREATE INDEX idx_msg_status_user ON message_status(user_id);
+
+-- ================= REACTION =================
+CREATE TABLE message_reactions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    message_id UUID NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    emoji VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(message_id, user_id, emoji)
+);
+
+CREATE INDEX idx_reactions_message ON message_reactions(message_id);
+CREATE INDEX idx_reactions_user ON message_reactions(user_id);
+
+-- ================= ACTION =================
+CREATE TABLE message_actions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    message_id UUID NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+    action_type VARCHAR(20) NOT NULL CHECK (action_type IN ('reply','forward','recall')),
+    target_message_id UUID REFERENCES messages(id) ON DELETE SET NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ================= FILE =================
+CREATE TABLE files (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    uploader_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    file_name VARCHAR(255),
+    file_url TEXT NOT NULL,
+    file_type VARCHAR(50),
+    file_size BIGINT NOT NULL CHECK (file_size > 0),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE message_files (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    message_id UUID NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+    file_id UUID NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+    UNIQUE(message_id, file_id)
+);
+
+CREATE TABLE file_management (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    file_id UUID NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+    is_favorite BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, file_id)
+);
+
+-- ================= NOTIFICATION =================
+CREATE TABLE notifications (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    type VARCHAR(50),
+    content TEXT,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_notifications_user ON notifications(user_id);
+
+-- ================= PRESENCE =================
+CREATE TABLE presence (
+    user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    is_online BOOLEAN NOT NULL DEFAULT FALSE,
+    last_seen TIMESTAMP,
+    is_typing BOOLEAN NOT NULL DEFAULT FALSE,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ================= SETTINGS =================
+CREATE TABLE settings (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    key VARCHAR(100) NOT NULL,
+    value TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, key)
+);
+
+-- ================= ADMIN =================
+CREATE TABLE admin_logs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    admin_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    action VARCHAR(255) NOT NULL,
+    target_id UUID,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ================= REPORT =================
+--CREATE TABLE reports (
+--    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+--    reporter_id UUID REFERENCES users(id) ON DELETE SET NULL,
+--    message_id UUID NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+--    reason TEXT,
+--    status VARCHAR(20) NOT NULL CHECK (status IN ('pending','resolved','rejected')) DEFAULT 'pending',
+--    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+--);
+-- ================= REPORT =================
+CREATE TABLE reports (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    
+    -- Người báo cáo
+    reporter_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    
+    -- ID tin nhắn (để trống nếu báo cáo User)
+    message_id UUID REFERENCES messages(id) ON DELETE CASCADE,
+    
+    -- ID người dùng bị báo cáo (để trống nếu báo cáo tin nhắn)
+    target_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    
+    -- Loại báo cáo: 'MESSAGE' hoặc 'USER'
+    report_type VARCHAR(20) NOT NULL DEFAULT 'MESSAGE',
+    
+    -- Lý do chính (ngắn gọn)
+    reason TEXT,
+    
+    -- Mô tả chi tiết vấn đề
+    description TEXT,
+    
+    -- Trạng thái xử lý
+    status VARCHAR(20) NOT NULL CHECK (status IN ('pending','resolved','rejected')) DEFAULT 'pending',
+    
+    -- Thời gian tạo
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ================= SEARCH =================
+CREATE TABLE message_index (
+    message_id UUID PRIMARY KEY REFERENCES messages(id) ON DELETE CASCADE,
+    tsv tsvector
+);
+CREATE INDEX idx_message_search ON message_index USING GIN(tsv);
+CREATE INDEX idx_messages_content_trgm ON messages USING GIN (content gin_trgm_ops);
+
+-- ================= FUNCTIONS =================
+CREATE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+   NEW.updated_at = CURRENT_TIMESTAMP;
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION update_message_index()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO message_index (message_id, tsv)
+  VALUES (
+    NEW.id,
+    to_tsvector('simple', unaccent(COALESCE(NEW.content, '')))
+  )
+  ON CONFLICT (message_id)
+  DO UPDATE SET tsv =
+    to_tsvector('simple', unaccent(COALESCE(NEW.content, '')));
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION update_conversation_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE conversations
+  SET updated_at = CURRENT_TIMESTAMP
+  WHERE id = NEW.conversation_id;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ================= TRIGGERS =================
+CREATE TRIGGER trg_users_updated BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER trg_conversations_updated BEFORE UPDATE ON conversations FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER trg_messages_updated BEFORE UPDATE ON messages FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER trg_files_updated BEFORE UPDATE ON files FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER trg_settings_updated BEFORE UPDATE ON settings FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER trg_presence_updated BEFORE UPDATE ON presence FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER trg_message_status_updated BEFORE UPDATE ON message_status FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER trg_update_message_index
+AFTER INSERT OR UPDATE ON messages
+FOR EACH ROW EXECUTE FUNCTION update_message_index();
+
+CREATE TRIGGER trg_update_conversation_on_message
+AFTER INSERT ON messages
+FOR EACH ROW EXECUTE FUNCTION update_conversation_timestamp();
+
+-- ================= INDEX =================
+CREATE INDEX idx_unread_messages
+ON message_status(user_id, status)
+WHERE status != 'read';
+
+--======================================================
+CREATE OR REPLACE FUNCTION get_user_conversations(p_user_id UUID)
+RETURNS TABLE (
+    conversation_id UUID,
+    name TEXT,
+    type TEXT,
+    last_message TEXT,
+    last_time TIMESTAMP,
+    sender_name TEXT,
+    sender_avatar TEXT,
+    unread_count BIGINT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.id,
+        c.name,
+        c.type,
+
+        m.content,
+        m.created_at,
+
+        u.full_name,
+        u.avatar_url,
+
+        COALESCE(unread.unread_count, 0)
+
+    FROM conversations c
+
+    JOIN conversation_members cm 
+        ON cm.conversation_id = c.id
+        AND cm.user_id = p_user_id
+
+    -- chỉ lấy message chưa bị xóa
+    LEFT JOIN LATERAL (
+        SELECT m1.*
+        FROM messages m1
+        WHERE m1.conversation_id = c.id
+          AND m1.is_deleted = FALSE
+        ORDER BY m1.created_at DESC
+        LIMIT 1
+    ) m ON TRUE
+
+    LEFT JOIN users u ON u.id = m.sender_id
+
+    -- unread count chuẩn hơn
+    LEFT JOIN (
+        SELECT 
+            m2.conversation_id,
+            ms.user_id,
+            COUNT(*) AS unread_count
+        FROM message_status ms
+        JOIN messages m2 ON m2.id = ms.message_id
+        WHERE ms.status IN ('sent','delivered') -- tránh scan thừa
+        GROUP BY m2.conversation_id, ms.user_id
+    ) unread
+        ON unread.conversation_id = c.id
+        AND unread.user_id = p_user_id
+
+    ORDER BY m.created_at DESC NULLS LAST; -- tránh NULL lên đầu
+END;
+$$ LANGUAGE plpgsql;
+--
+----============================================--
+-- 2. get_messages (fix input + an toàn)
+CREATE OR REPLACE FUNCTION get_messages(
+    p_conversation_id UUID,
+    p_limit INT DEFAULT 20,
+    p_offset INT DEFAULT 0
+)
+RETURNS TABLE (
+    message_id UUID,
+    content TEXT,
+    message_type TEXT,
+    created_at TIMESTAMP,
+    sender_name TEXT,
+    sender_avatar TEXT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        m.id,
+        m.content,
+        m.message_type,
+        m.created_at,
+        u.full_name,
+        u.avatar_url
+    FROM messages m
+    LEFT JOIN users u ON u.id = m.sender_id
+    WHERE m.conversation_id = p_conversation_id
+      AND m.is_deleted = FALSE
+    ORDER BY m.created_at DESC
+    LIMIT GREATEST(p_limit, 1)
+    OFFSET GREATEST(p_offset, 0);
+END;
+$$ LANGUAGE plpgsql;
+--
+----============================================--
+
+-- 3. send_message (FIX QUAN TRỌNG NHẤT)
+CREATE OR REPLACE FUNCTION send_message(
+    p_conversation_id UUID,
+    p_sender_id UUID,
+    p_content TEXT
+)
+RETURNS UUID
+AS $$
+DECLARE
+    new_message_id UUID;
+BEGIN
+    -- validate basic
+    IF p_content IS NULL OR LENGTH(TRIM(p_content)) = 0 THEN
+        RAISE EXCEPTION 'Message content cannot be empty';
+    END IF;
+
+    -- insert message
+    INSERT INTO messages (
+        conversation_id,
+        sender_id,
+        content,
+        message_type
+    )
+    VALUES (
+        p_conversation_id,
+        p_sender_id,
+        p_content,
+        'TEXT'
+    )
+    RETURNING id INTO new_message_id;
+
+    -- insert status cho ALL members (quan trọng)
+    INSERT INTO message_status (message_id, user_id, status)
+    SELECT 
+        new_message_id,
+        cm.user_id,
+        CASE 
+            WHEN cm.user_id = p_sender_id THEN 'read'
+            ELSE 'sent'
+        END
+    FROM conversation_members cm
+    WHERE cm.conversation_id = p_conversation_id;
+
+    RETURN new_message_id;
+END;
+$$ LANGUAGE plpgsql;
+
+--
+----============================================--
+-- 4. mark_messages_as_read (chuẩn hóa)
+CREATE OR REPLACE FUNCTION mark_messages_as_read(
+    p_conversation_id UUID, 
+    p_user_id UUID
+)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE message_status ms
+    SET status = 'read',
+        updated_at = CURRENT_TIMESTAMP
+    FROM messages m
+    WHERE ms.message_id = m.id
+      AND m.conversation_id = p_conversation_id
+      AND ms.user_id = p_user_id
+      AND ms.status IN ('sent','delivered'); -- tối ưu hơn
+END;
+$$ LANGUAGE plpgsql;
+--
+----============================================--
+CREATE INDEX IF NOT EXISTS idx_messages_conv_created 
+ON messages(conversation_id, created_at DESC);
+
+-- unread tối ưu hơn
+CREATE INDEX IF NOT EXISTS idx_message_status_user_status 
+ON message_status(user_id, status);
+
+CREATE INDEX IF NOT EXISTS idx_message_status_message 
+ON message_status(message_id);
+
+-- join cực quan trọng
+CREATE INDEX IF NOT EXISTS idx_conv_members_user_conv
+ON conversation_members(user_id, conversation_id);
+
+
+
+-- =====================================================
+--  CLEAN DATA (AN TOÀN)
+-- =====================================================
+TRUNCATE TABLE 
+message_index,
+auth_sessions,
+reports,
+admin_logs,
+settings,
+presence,
+notifications,
+file_management,
+message_files,
+files,
+message_actions,
+message_reactions,
+message_status,
+messages,
+conversation_members,
+conversations,
+contacts,
+users
+CASCADE;
+
+

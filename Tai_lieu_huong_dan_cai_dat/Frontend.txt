@@ -1,0 +1,119 @@
+Cài đặt React
+
+Truy cập trang tải Node.js
+
+Kiểm tra phiên bản đã cài:
+
+node --version
+npm --version
+
+Sau khi cài Node.js, tiến hành tạo project React: npx create-react-app frontend
+
+Di chuyển vào thư mục project: cd frontend
+
+Chạy ứng dụng React: npm start
+
+Mặc định ứng dụng sẽ chạy tại: React Localhost
+
+Cây thư mục cần làm: (Hiện tại đang là đường dẫn D:\DOANTOTNGHIEP\Xay dung he thong giao tiep noi bo trong doanh nghiep\emqx-docker\App\frontend)
+
+Khuyến nghị: nên chỉnh sửa đường dẫn phù hợp
+
+src/
+├── api/ 
+│   ├── adminApi.js  
+│   ├── authApi.js                  
+│   ├── conversationApi.js 
+│   ├── fileApi.js 
+│   ├── messageApi.js     
+│   └── UserApi.js   
+│                                   
+├── components/  
+│   │   ├── admin/
+│   │   │   ├── AdminSidebar.js
+│   │   │   └── Table.js  
+│   │   │       
+│   │   ├── chat/
+│   │   │   ├── AddFriendModal.js
+│   │   │   ├── CreateGroupModal.js
+│   │   │   ├── EditGroupModal.js
+│   │   │   ├── MessageStatus.js
+│   │   │   ├── KeyManagementModal.js
+│   │   │   ├── PendingRequests.js
+│   │   │   ├── PasswordModal.js
+│   │   │   ├── PinModal.js
+│   │   │   ├── ReportModal.js
+│   │   │   └── TypingIndicator.js
+│   │   │
+│   │   ├── home/
+│   │   │   ├── UserItem.js
+│   │   │   └── ProfileCard.js
+│   │   │
+│   │   └── layout/
+│   │       ├── Sidebar.js
+│   │       └── UserDetailModal.js
+│   
+├── hooks/   
+│   │   ├── useAdminData.js    
+│   │   ├── useFriendSocket.js      
+│   │   ├── useChat.js
+│   │   └── useHomeData.js
+│   │
+│    
+├── pages/   
+│   │   └── admin/     
+│   │   │   ├── AdminDashboard.js
+│   │   │   ├── AdminLayout.js
+│   │   │   └── DatabaseManager.js
+│   │   │
+│   │   └── chat/     
+│   │       ├── ChatPage.js                    
+│   │       ├── ChatStyles.js
+│   │       └── MessageItems.js     
+│   ├── Home.js
+│   ├── Login.js          
+│   └── Register.js
+│ 
+├── styles/      
+│   ├── Home.module.css
+│   ├── admin.module.css 
+│   ├── AdminDashboard.css
+│   ├── KeyManagementModal.module.css
+│   ├── CreateGroupModal.module.css
+│   ├── Login.module.css
+│   ├── Notification.css
+│   ├── Register.module.css
+│   └── global.css
+│ 
+├── routes/      
+│   ├── AdminRoute.js      
+│   └── PrivateRoute.js
+│   
+├── utils/               
+│   ├── cryptoFile.js 
+│   ├── formatFile.js 
+│   └── formatDateTime.js                          
+│
+├── App.js                  
+└── index.js     
+
+
+Các thư viên cần cài đặt: 
+
++-- @ant-design/icons@6.2.5
++-- @stomp/stompjs@7.3.0
++-- @testing-library/dom@10.4.1
++-- @testing-library/jest-dom@6.9.1
++-- @testing-library/react@16.3.2
++-- @testing-library/user-event@13.5.0
++-- antd@6.4.3
++-- axios@1.15.0
++-- emoji-picker-react@4.19.1
++-- react-dom@19.2.5
++-- react-icons@5.6.0
++-- react-router-dom@7.14.1
++-- react-scripts@5.0.1
++-- react@19.2.5
++-- sockjs-client@1.6.1
++-- stompjs@2.3.3
+`-- web-vitals@2.1.4

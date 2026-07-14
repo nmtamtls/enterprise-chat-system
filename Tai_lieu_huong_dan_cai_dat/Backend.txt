@@ -1,0 +1,251 @@
+Cài đặt Spring Initializr Java Support trong vscode và áp dung project maven vào 
+
+1. Tại vscode (visual code) cài Spring Initializr Java Support của Microsoft.com
+
+2. Ctrl + shilft + P gõ dòng lệnh Spring Initializr Java để bắt đầu dự án Maven or Gradle project.
+
+2.1 Chọn version muốn khởi động như 4.1.0
+
+2.2 Chọn ngôn ngữ Java
+
+2.3 Input group (com.example) như com.chatapp
+
+2.4 Input artifact (demo) như backend
+
+2.5 Input Package Name (com.example.demo) như com.chatapp.backend
+
+2.6 Chọn Jar
+
+2.7 chọn Java version 17 (nếu có cài đặt JDK 21 thì sử dung bản 21)
+
+2.8 Dependencies (có thể bổ sung vào pom.xml): 
+
+Spring Boot spring-boot-starter-web
+Spring Data JPA spring-boot-starter-data-jpa
+PostgreSQL postgresql
+Eclipse Paho MQTT Client org.eclipse.paho.client.mqttv3
+MinIO Java SDK minio
+Project Lombok lombok
+Spring Security spring-boot-starter-security
+JJWT API jjwt-api
+JJWT Impl jjwt-impl
+JJWT Jackson jjwt-jackson
+Spring Boot DevTools spring-boot-devtools
+Spring Boot Test spring-boot-starter-test
+Spring WebSocket spring-boot-starter-websocket
+
+2.9 Chọn file hoặc ổ đĩa để lưu trữ dự án maven 
+
+3.0 Cây thư mục dự án
+
+backend/
+├── src/main/java/com/chatapp/backend
+│
+│   ├── config/                         # cấu hình hệ thống
+│   │   ├── SecurityConfig.java
+│   │   ├── MinioConfig.java
+│   │   ├── CorsConfig.javaF
+│   │   └── MqttConfig.java
+│
+│   ├── security/                       # bảo mật
+│   │   └── jwt/
+│   │   │   ├── JwtUtil.java
+│   │   │   ├── JwtFilter.java
+│   │   │   └── JwtEntryPoint.java
+│   │   ├── CustomUserDetailsService.java
+│   │
+│   ├── common/                         # dùng chung
+│   │   ├── exception/
+│   │   │   ├── GlobalExceptionHandler.java
+│   │   │   └── ResourceNotFoundException.java
+│   │   │
+│   │   ├── response/
+│   │   │   └── ApiResponse.java
+│   │   │
+│   │   └── util/
+│   │       ├── DateUtil.java
+│   │       └── FileUtil.java
+│
+│   ├── auth/                           # đăng nhập / đăng ký
+│   │   ├── controller/
+│   │   │   └── AuthController.java
+│   │   │
+│   │   ├── service/
+│   │   │   └── AuthService.java
+│   │   │
+│   │   └── dto/
+│   │       ├── LoginRequest.java
+│   │       ├── RegisterRequest.java
+│   │       └── AuthResponse.java
+│
+│   ├── user/                           # user profile
+│   │   ├── controller/
+│   │   │   └── UserController.java
+│   │   │
+│   │   ├── service/
+│   │   │   └── UserService.java
+│   │   │
+│   │   ├── repository/
+│   │   │   └── UserRepository.java
+│   │   │
+│   │   ├── entity/
+│   │   │   └── User.java
+│   │   │
+│   │   └── dto/
+│   │       ├── UserResponse.java
+│   │       └── UpdateUserRequest.java
+│   
+│   ├── admin/                           # user profile
+│   │   ├── controller/
+│   │   │   └── AdminController.java
+│   │   │
+│   │   ├── service/
+│   │   │   └── AdminService.java
+│   │   │
+│   │   └── dto/
+│   │       └── AdminDashboardResponse.java
+│   │ 
+│   ├── contact/                           # Quan hệ bạn bè
+│   │   ├── controller/
+│   │   │   └── ContactController.java
+│   │   │
+│   │   ├── service/
+│   │   │   └── ContactService.java
+│   │   │
+│   │   ├── repository/
+│   │   │   └── ContactRepository.java
+│   │   │
+│   │   ├── entity/
+│   │   │   └── Contact.java
+│   │   │
+│   │   └── dto/
+│   │       ├── ContactResponse.java
+│   │       └── AddContactRequest.java
+│
+│   ├── conversation/                   # phòng chat
+│   │   ├── controller/
+│   │   │   └── ConversationController.java
+│   │   │
+│   │   ├── service/
+│   │   │   └── ConversationService.java
+│   │   │
+│   │   ├── repository/
+│   │   │   ├── ConversationRepository.java
+│   │   │   └── ConversationMemberRepository.java
+│   │   │
+│   │   ├── entity/
+│   │   │   ├── Conversation.java
+│   │   │   └── ConversationMember.java
+│   │   │
+│   │   └── dto/
+│   │       ├── AdminGroupDTO.java
+│   │       ├── CreateConversationRequest.java
+│   │       └── ConversationResponse.java
+│
+│   ├── message/                        # tin nhắn
+│   │   ├── controller/
+│   │   │   └── MessageController.java 
+│   │   │
+│   │   ├── service/
+│   │   │   └── MessageService.java 
+│   │   │
+│   │   ├── repository/
+│   │   │   ├── MessageRepository.java
+│   │   │   ├── MessageFileRepository.java
+│   │   │   ├── MessageReactionRepository.java 
+│   │   │   └── MessageStatusRepository.java
+│   │   │
+│   │   ├── entity/
+│   │   │   ├── Message.java
+│   │   │   ├── MessageFile.java
+│   │   │   ├── MessageReaction.java 
+│   │   │   └── MessageStatus.java
+│   │   │
+│   │   └── dto/
+│   │       ├── SendMessageRequest.java
+│   │       ├── ReactionRequest.java 
+│   │       ├── ReactionResponse.java 
+│   │       └── MessageResponse.java
+│
+│   ├── file/                           # lưu trữ file 
+│   │   ├── entity/
+│   │   │   └── File.java  
+│   │   │
+│   │   ├── repository/
+│   │   │   └── FileRepository.java      
+│   │   │                  
+│   │   ├── controller/
+│   │   │   └── FileController.java
+│   │   │
+│   │   ├── service/
+│   │   │   └── FileService.java
+│   │   │
+│   │   └── dto/
+│   │       └── FileResponse.java
+│
+│   ├── notification/                   # thông báo
+│   │   ├── service/
+│   │   │   └── NotificationService.java
+│   │   │
+│   │   ├── repository/
+│   │   │   └── NotificationRepository.java
+│   │   │
+│   │   └── entity/
+│   │       └── Notification.java
+│
+│   ├── report/                   #báo cáo 
+│   │   ├── repository/
+│   │   │   └── ReportRepository.java
+│   │   │   
+│   │   ├── dto/	
+│   │   │   ├── CreateReportRequest.java
+│   │   │   └── ReportResponse.java
+│   │   │   
+│   │   ├── service/
+│   │   │   └── ReportService.java
+│   │   │ 
+│   │   ├── controller/
+│   │   │   └── ReportController.java
+│   │   │
+│   │   └── entity/
+│   │       └── Report.java
+│
+│
+│   ├── presence/                       # Trạng thái online/offline 
+│   │   ├── service/
+│   │   │   └── PresenceService.java
+│   │   │
+│   │   ├── repository/
+│   │   │   └── PresenceRepository.java
+│   │   │
+│   │   ├── controller/
+│   │   │   └── PresenceController.java
+│   │   │
+│   │   ├── dto/	
+│   │   │   └── PresenceDTO.java
+│   │   │
+│   │   └── entity/
+│   │       └── Presence.java
+│   │
+│   ├── websocket/                       
+│   │   ├── service/
+│   │   │   └── WebSocketService.java
+│   │   │
+│   │   ├── controller/
+│   │   │   ├── ChatWebSocketController.java
+│   │   │   └── WebSocketEventListener.java
+│   │   │
+│   │   ├── dto/	
+│   │   │   └── ChatMessage.java
+│   │   │
+│   │   └── config/
+│   │       └── WebSocketConfig.java
+│   │
+│   │
+│   ├──  BackendApplication.java
+│   └── TestController.java
+│
+├── src/main/resources/
+│   ├── application.properties
+│
+├── pom.xml

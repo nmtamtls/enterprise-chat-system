@@ -1,0 +1,180 @@
+Cài đặt Docker Desktop 
+
+Khuyến nghị: cấu hình vị trí lưu trữ phù hợp cho Docker virtual disk nhằm đảm bảo đủ dung lượng cho image, container và dữ liệu.
+
+Lưu ý: kiểm tra phiên bản của WSL2 bằng lệnh: wsl -l -v
+
+WSL2 (Windows Subsystem for Linux 2) là môi trường cho phép chạy Linux bên trong Windows mà không cần cài máy ảo như VirtualBox hay VMware. Docker Desktop trên Windows sử dụng WSL2 để chạy các container Linux hiệu quả hơn.
+
+Truy cập link: https://www.docker.com/products/docker-desktop/
+
+Kiểm tra phiên bản đã cài đặt:
+
+docker --version
+docker compose version
+
+2. Mở CMD tại thư mục chứa docker-compose.yml và Dockerfile
+
+2.1 Tạo file Docker
+
+"FROM emqx/emqx:latest
+
+COPY emqx.conf /opt/emqx/etc/emqx.conf"
+
+2.2 Tạo file docker-compose.yml
+
+"services:
+
+  # ================= POSTGRES =================
+  postgres:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: chat_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - chat-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  # ================= MINIO =================
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+    networks:
+      - chat-network
+
+
+  # ================= EMQX =================
+  emqx:
+    image: emqx/emqx
+    container_name: emqx
+    restart: always
+    ports:
+      - "1883:1883"
+      - "8083:8083"
+      - "18083:18083"
+    networks:
+      - chat-network
+
+
+  # ================= BACKEND =================
+  backend:
+    image: maven:3.9-eclipse-temurin-17
+    container_name: spring-backend
+    working_dir: /app
+    volumes:
+      - ./App/backend:/app
+    command: mvn spring-boot:run
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      emqx:
+        condition: service_started
+    ports:
+      - "8081:8081"   # ✔  SPRING BOOT
+    environment:
+
+      # ================= DATABASE =================
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/chat_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
+
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_SHOW_SQL: "true"
+
+      # ================= JWT =================
+      JWT_SECRET: secret-key
+      JWT_EXPIRATION: 86400000
+
+      # ================= MINIO (FIX QUAN TRỌNG) =================
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET: chat-files   # ✔ FIX: đồng bộ bucket
+
+      # ================= MQTT =================
+      MQTT_BROKER: tcp://emqx:1883
+
+    networks:
+      - chat-network
+
+
+  # ================= FRONTEND =================
+  frontend:
+    image: node:18
+    container_name: react-frontend
+    working_dir: /app
+    volumes:
+      - ./App/frontend:/app
+    command: sh -c "npm install && npm start -- --host 0.0.0.0"
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:8081
+      REACT_APP_MINIO_URL: http://localhost:9000   # FIX IMAGE URL
+    networks:
+      - chat-network
+
+
+volumes:
+  pgdata:
+  miniodata:
+
+networks:
+  chat-network:
+    driver: bridge"
+
+2.3 Kiểm tra file bằng lệnh: "dir" (sửa đường dẫn sao cho phù hợp vs máy, ở đây đang là D:\DOANTOTNGHIEP\Xay dung he thong giao tiep noi bo trong doanh nghiep\emqx-docker)
+
+Phải có:
+
+docker-compose.yml
+Dockerfile
+App/
+│ 
+├── backend/
+│   
+└── frontend/
+
+3. Khởi động bằng lệnh: docker compose up -d
+
+4. Kiểm tra container đã tồn tại chưa: docker ps
+
+Phải thấy:
+
+postgres-db
+minio
+emqx
+spring-backend
+react-frontend
+
+5. Tắt docker bằng lệnh: docker compose down
+
+

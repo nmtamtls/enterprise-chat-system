@@ -1,0 +1,1 @@
+Cài đặt Postman thông qua https://www.postman.com/downloads/ và chọn phiên bản phù hợp với máy (Window)
